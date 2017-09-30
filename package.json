@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "production": "./node_modules/pm2/bin/pm2",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -12,9 +13,10 @@
     "url": "git+https://github.com/Polite-AI/matrix-bot.git"
   },
   "dependencies": {
-    "olm": "https://matrix.org/packages/npm/olm/olm-2.2.2.tgz",
     "babel-runtime": "6.26.0",
-    "matrix-js-sdk": "0.8.4"
+    "matrix-js-sdk": "0.8.4",
+    "olm": "https://matrix.org/packages/npm/olm/olm-2.2.2.tgz",
+    "pm2": "2.7.1"
   },
   "author": "",
   "license": "MIT",
