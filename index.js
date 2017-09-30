@@ -1,42 +1,70 @@
 const log = require('./logger.js');
 const config = require('./config.js');
-log.info(`Starting PoliteAI Matrix Bot using [${config.matrix.baseUrl}]`);
+log.info(`Creating ${config.bots.length} bots`);
 
 global.Olm = require('olm');
 const sdk = require('matrix-js-sdk');
+const fs = require('fs');
 
 const handleMessage = require('./app.js'); // Our 'routes'
 
-const client = sdk.createClient({ // Create a client with data from config.js
-    baseUrl: config.matrix.baseUrl,
-    userId: config.matrix.userId,
-    accessToken: config.matrix.accessToken
-});
+config.bots.forEach(botConfig => {
+    log.info(`Starting PoliteAI Matrix Bot using [${botConfig.userId}]`);
 
-client.startClient(); // Because apparently this is necessary?
+    let messageLastReceived = 0;
 
-client.on("Room.timeline", async function (event, room, toStartOfTimeline) { // Listen to Room Timeline events
-    if (toStartOfTimeline) {
-        return; // don't print paginated results
-    }
-    if (event.getType() !== "m.room.message") {
-        return; // only print messages
-    }
-    if (event.getSender() === config.matrix.userId) {
-        return;
+    try {
+        messageLastReceived = Number(fs.readFileSync('./message_received_dtg', 'utf8'));
+    } catch (err) {
+        const now = Date.now();
+        fs.writeFileSync('./message_received_dtg', now, 'utf8');
+        messageLastReceived = now;
     }
 
-    const messageBody = event.getContent().body;
-
-    handleMessage(messageBody, room, event, client);
-    log.log("(%s) %s :: %s", room.name, event.getSender(), messageBody); //Log all messages in room
-});
-
-client.on("RoomMember.membership", function (event, member) {
-    if (member.membership === "invite" && member.userId === config.matrix.userId) {
-        client.joinRoom(member.roomId).done(function () {
-            log.log("Auto-joined %s", member.roomId);
-            client.sendTextMessage(member.roomId, `Polite.AI bot has entered the building...`);
-        });
+    if (isNaN(messageLastReceived)) {
+        messageLastReceived = Date.now();
     }
+
+    
+    const client = sdk.createClient({ // Create a client with data from config.js
+        baseUrl: botConfig.baseUrl,
+        userId: botConfig.userId,
+        accessToken: botConfig.accessToken
+    });
+
+    client.startClient(); // Because apparently this is necessary?
+
+    client.on("Room.timeline", async function (event, room, toStartOfTimeline) { // Listen to Room Timeline events
+        if (toStartOfTimeline) {
+            return; // don't print paginated results
+        }
+        if (event.getType() !== "m.room.message") {
+            return; // only print messages
+        }
+        if (event.getSender() === botConfig.userId) {
+            return;
+        }
+        if (event._date < messageLastReceived) { // Probably already processed
+            return;
+        }
+
+        const now = Date.now();
+        fs.writeFile(`./message_received_dtg_${botConfig.userId.replace(/[^a-zA-Z]/g, '')}`, now, 'utf8', () => {});
+        messageLastReceived = now;
+
+        const messageBody = event.getContent().body;
+
+        handleMessage(messageBody, room, event, client, botConfig.language);
+        log.log(`[${botConfig.userId}] ${room.name} ${event.getSender()} ${messageBody}`); //Log all messages in room
+    });
+
+    client.on("RoomMember.membership", function (event, member) {
+        if (member.membership === "invite" && member.userId === botConfig.userId) {
+            client.joinRoom(member.roomId).done(function () {
+                log.log("Auto-joined %s", member.roomId);
+                client.sendTextMessage(member.roomId, `Polite.AI bot has entered the building...`);
+            });
+        }
+    });
+
 });
