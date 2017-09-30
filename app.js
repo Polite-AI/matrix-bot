@@ -24,10 +24,9 @@ module.exports = function (message, room, event, client, language) {
             const hash = crypto.createHash('sha256');
 
             hash.update(salt+'matrix'+room.roomId);
-            console.log(hash.digest('hex'));
 
             const positiveResults = Object.keys(res.results).filter(key => Number(res.results[key]));
-            return db.none('INSERT INTO messages(message, classifier, derived, room_provider, room_id, room_key, event_id, time) VALUES(${message}, ${classifier}, ${derived}, ${room_provider}, ${room_id}, ${event_id}, ${time})', {
+            return db.none('INSERT INTO messages(message, classifier, derived, room_provider, room_id, room_key, event_id, time) VALUES(${message}, ${classifier}, ${derived}, ${room_provider}, ${room_id}, ${room_key}, ${event_id}, ${time})', {
                 message: message,
                 classifier: config.api.version,
                 derived: JSON.stringify(res.results),
