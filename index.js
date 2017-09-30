@@ -28,7 +28,7 @@ client.on("Room.timeline", async function (event, room, toStartOfTimeline) { // 
 
     const messageBody = event.getContent().body;
 
-    await handleMessage(messageBody, room, event, client);
+    handleMessage(messageBody, room, event, client);
     log.log("(%s) %s :: %s", room.name, event.getSender(), messageBody); //Log all messages in room
 });
 

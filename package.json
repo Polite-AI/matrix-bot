@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "production": "./node_modules/pm2/bin/pm2",
+    "production": "./node_modules/pm2/bin/pm2 start ecosystem.config.js",
+    "prod-log": "./node_modules/pm2/bin/pm2 logs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -16,7 +17,9 @@
     "babel-runtime": "6.26.0",
     "matrix-js-sdk": "0.8.4",
     "olm": "https://matrix.org/packages/npm/olm/olm-2.2.2.tgz",
-    "pm2": "2.7.1"
+    "pm2": "2.7.1",
+    "request": "2.83.0",
+    "request-promise-native": "1.0.5"
   },
   "author": "",
   "license": "MIT",
