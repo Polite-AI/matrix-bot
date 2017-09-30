@@ -9,11 +9,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="manifest" href="site.webmanifest">
-    <link rel="apple-touch-icon" href="icon.png">
+    <link rel="apple-touch-icon" href="/icon.png">
     <!-- Place favicon.ico in the root directory -->
 
-    <link rel="stylesheet" href="css/normalize.css">
-    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="/css/normalize.css">
+    <link rel="stylesheet" href="/css/main.css">
 </head>
 
 <body>
@@ -25,31 +25,35 @@
     <div id="frame"></div>
 
 
+    <script id='message' type='text/html'>
+        <div class="card">
+            <pre><code>{{JSON.stringify(data, null, '\t')}}</code></pre>
+            <hr />
+            <button on-click="buttonClick">Do A Thing</button>
+        </div>
+    </script>
+
     <script id='home' type='text/html'>
 
         <h1>Polite Bot Admin</h1>
 
         {{#each messages}}
-            <div class="card">{{text}}<br />
-            @ {{time}}
-            <br /><br />
-            <pre>{{derived}}</pre></div>
-        {{/each}}
+        <Message data='{{this}}' /> {{/each}}
 
     </script>
 
 
 
 
-    <script src="js/vendor/modernizr-3.5.0.min.js"></script>
+    <script src="/js/vendor/modernizr-3.5.0.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
         crossorigin="anonymous"></script>
     <script>
         window.jQuery || document.write('<script src="js/vendor/jquery-3.2.1.min.js"><\/script>')
     </script>
     <script src="https://cdn.jsdelivr.net/npm/ractive"></script>
-    <script src="js/plugins.js"></script>
-    <script src="js/main.js"></script>
+    <script src="/js/plugins.js"></script>
+    <script src="/js/main.js"></script>
 
     <!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
     <script>

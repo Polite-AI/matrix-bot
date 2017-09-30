@@ -68,3 +68,36 @@ config.bots.forEach(botConfig => {
     });
 
 });
+
+const bodyParser = require('body-parser');
+const express = require('express');
+const apiServer = express();
+
+const pgp = require('pg-promise')();
+const db = pgp(config.postgres);
+
+apiServer.use(express.static('./client'));
+apiServer.use(bodyParser.json());
+
+apiServer.get('/admin/:roomKey', function(req, res){
+    fs.createReadStream('./client/index.html').pipe(res);
+});
+
+apiServer.get('/getMessages/:roomKey', function(req, res){
+    const roomKey = req.params.roomKey;
+
+    db.query(`SELECT * from messages WHERE room_id='${roomKey}'`)
+        .then(data => {
+            res.send(data);
+        });
+});
+
+apiServer.post('/sayHello/:eventId', function(req, res){
+    const data = req.body;
+
+    console.info(data);
+
+    res.send('Hi');
+});
+
+apiServer.listen(8080);
