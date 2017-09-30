@@ -20,7 +20,7 @@ CREATE TABLE messages (
 	  classifier TEXT,
 	  derived TEXT,
 	  corrected TEXT,
-	  room_provider,
+	  room_provider TEXT,
 	  room_key TEXT,
 	  room_id TEXT
 );
