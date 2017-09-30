@@ -1,0 +1,25 @@
+{
+  "name": "polite-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Polite-AI/matrix-bot.git"
+  },
+  "dependencies": {
+    "olm": "https://matrix.org/packages/npm/olm/olm-2.2.2.tgz",
+    "babel-runtime": "6.26.0",
+    "matrix-js-sdk": "0.8.4"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Polite-AI/matrix-bot/issues"
+  },
+  "homepage": "https://polite.ai"
+}
