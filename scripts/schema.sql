@@ -17,6 +17,8 @@ DROP SEQUENCE IF EXISTS message_seq;
 CREATE TABLE messages (
           message_id BIGINT DEFAULT nextval('message_seq'::text),
 	  message TEXT NOT NULL,
+	  event_id TEXT,
+	  time TIMESTAMP,
 	  classifier TEXT,
 	  derived TEXT,
 	  corrected TEXT,
@@ -28,3 +30,8 @@ CREATE TABLE messages (
 
 
 CREATE SEQUENCE message_seq start 100 increment 1 cache 20;
+
+grant all on DATABASE polite TO polite;
+grant all on table messages TO polite;
+grant all on SEQUENCE message_seq TO polite;
+
