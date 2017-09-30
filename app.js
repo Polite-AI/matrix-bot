@@ -23,12 +23,14 @@ module.exports = function (message, room, event, client, language) {
                 const messageResponse = makeMessageResponse(message, res.results, language);
                 client.sendTextMessage(room.roomId, `${event.getSender()}: ${messageResponse}`);
 
-                return db.none('INSERT INTO messages(message, classifier, derived, room_provider, room_id) VALUES(${message}, ${classifier}, ${derived}, ${room_provider}, ${room_id})', {
+                return db.none('INSERT INTO messages(message, classifier, derived, room_provider, room_id, event_id, time) VALUES(${message}, ${classifier}, ${derived}, ${room_provider}, ${room_id}, ${event_id}, ${time})', {
                     message: message,
                     classifier: config.api.version,
                     derived: JSON.stringify(res.results),
                     room_provider: 'matrix',
-                    room_id: room.roomId
+                    room_id: room.roomId,
+                    event_id: event.event.event_id,
+                    time: event._date
                 });
             }
         })
