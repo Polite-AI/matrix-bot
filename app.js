@@ -26,6 +26,12 @@ module.exports = function (message, room, event, client, language) {
             hash.update(salt+'matrix'+room.roomId);
 
             const positiveResults = Object.keys(res.results).filter(key => Number(res.results[key]));
+            // If we got a positive result then bitch in the room
+            if (positiveResults.length) {
+                const messageResponse = makeMessageResponse(message, res.results, language);
+                client.sendTextMessage(room.roomId, `${event.getSender()}: ${messageResponse}`);
+            }
+            // Always store the message in the DB
             return db.none('INSERT INTO messages(message, classifier, derived, room_provider, room_id, room_key, event_id, time) VALUES(${message}, ${classifier}, ${derived}, ${room_provider}, ${room_id}, ${room_key}, ${event_id}, ${time})', {
                 message: message,
                 classifier: config.api.version,
@@ -36,10 +42,7 @@ module.exports = function (message, room, event, client, language) {
                 event_id: event.event.event_id,
                 time: event._date
             });
-            if (positiveResults.length) {
-                const messageResponse = makeMessageResponse(message, res.results, language);
-                client.sendTextMessage(room.roomId, `${event.getSender()}: ${messageResponse}`);
-            }
+
 
         })
         .catch(err => {
