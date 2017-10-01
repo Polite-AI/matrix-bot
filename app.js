@@ -10,7 +10,13 @@ const db = pgp(config.postgres);
 const salt = config.global.secretsalt;
 
 module.exports = function (message, room, event, client, language) {
+
     log.log(`Recieved message [${message}]`);
+    user_id = event.getSender();
+    // Don't store or act on our own messages
+    for (bot in config.bots)
+        if(config.bots[bot].userId == user_id)
+            return (Promise.resolve(true));
     return request.post({
             method: 'POST',
             uri: `http://api.polite.ai/api/${config.api.version}/classify`,
@@ -42,7 +48,7 @@ module.exports = function (message, room, event, client, language) {
                 room_provider: 'matrix',
                 room_id: room.roomId,
                 room_key: room_key,
-                user_id: event.getSender(),
+                user_id: user_id,
                 event_id: event.event.event_id,
                 time: event._date
             });
