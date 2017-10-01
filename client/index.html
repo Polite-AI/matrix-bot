@@ -35,7 +35,7 @@
     <div id="frame"></div>
 
 
-    <script id='message' type='text/html'>
+    <script id='Message' type='text/html'>
         <div class="card">
             <pre><code>{{JSON.stringify(data, null, '\t')}}</code></pre>
             <hr />
@@ -48,7 +48,7 @@
         <h1>Polite Bot Admin</h1>
 
         {{#each messages}}
-        <message data='{{this}}' /> {{/each}}
+        <Message data='{{this}}' /> {{/each}}
 
     </script>
 
