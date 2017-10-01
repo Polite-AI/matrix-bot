@@ -65,7 +65,7 @@ config.bots.forEach(botConfig => {
             client.joinRoom(member.roomId).done(function () {
                 log.log("Auto-joined %s", member.roomId);
                 const room_key = require('crypto').createHash('sha256',salt)
-                                    .update('matrix'+room.roomId)
+                                    .update('matrix'+member.roomId)
                                     .digest('base64');
                 client.sendTextMessage(member.roomId, 'Polite.AI bot has entered the building...\nTeach me more at http://api.polite.ai/admin/'+room_key);
 
