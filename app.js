@@ -35,13 +35,14 @@ module.exports = function (message, room, event, client, language) {
                 client.sendTextMessage(room.roomId, `${event.getSender()}: ${messageResponse}`);
             }
             // Always store the message in the DB
-            return db.none('INSERT INTO messages(message, classifier, derived, room_provider, room_id, room_key, event_id, time) VALUES(${message}, ${classifier}, ${derived}, ${room_provider}, ${room_id}, ${room_key}, ${event_id}, ${time})', {
+            return db.none('INSERT INTO messages(message, classifier, derived, room_provider, room_id, room_key, user_id, event_id, time) VALUES(${message}, ${classifier}, ${derived}, ${room_provider}, ${room_id}, ${room_key}, ${user_id}, ${event_id}, ${time})', {
                 message: message,
                 classifier: config.api.version,
                 derived: JSON.stringify(res.results),
                 room_provider: 'matrix',
                 room_id: room.roomId,
                 room_key: room_key,
+                user_id: event.event.user_id,
                 event_id: event.event.event_id,
                 time: event._date
             });
