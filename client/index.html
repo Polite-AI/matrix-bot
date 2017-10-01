@@ -27,9 +27,10 @@
 
     <script id='message' type='text/html'>
         <div class="card">
-            <pre><code>{{JSON.stringify(data, null, '\t')}}</code></pre>
+            <!--pre><code>{{JSON.stringify(data, null, '\t')}}</code-->
+            <p><label>{{data.user_id}}</label>{{data.message}}</p></pre>
             <hr />
-            <button on-click="buttonClick">Do A Thing</button>
+            <button on-click="buttonClick">Appeal/Report</button>
         </div>
     </script>
 
