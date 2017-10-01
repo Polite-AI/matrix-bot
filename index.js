@@ -62,7 +62,11 @@ config.bots.forEach(botConfig => {
         if (member.membership === "invite" && member.userId === botConfig.userId) {
             client.joinRoom(member.roomId).done(function () {
                 log.log("Auto-joined %s", member.roomId);
-                client.sendTextMessage(member.roomId, `Polite.AI bot has entered the building...`);
+                const room_key = require('crypto').createHash('sha256',salt)
+                                    .update('matrix'+room.roomId)
+                                    .digest('base64');
+
+                client.sendTextMessage(member.roomId, makeMessageResponse('http://polite.ai is Bot is in the room ', null, 'english', room_key, null));
             });
         }
     });
