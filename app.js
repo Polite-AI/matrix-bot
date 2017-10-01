@@ -16,7 +16,7 @@ module.exports = function (message, room, event, client, language) {
     // Don't store or act on our own messages
     for (bot in config.bots)
         if(config.bots[bot].userId == user_id)
-            return (Promise.resolve(() => true);
+            return Promise.resolve(() => true);
     return request.post({
             method: 'POST',
             uri: `http://api.polite.ai/api/${config.api.version}/classify`,
