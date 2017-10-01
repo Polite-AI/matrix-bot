@@ -30,7 +30,8 @@
             <!--pre><code>{{JSON.stringify(data, null, '\t')}}</code-->
             <p><label>{{data.user_id}}</label>{{data.message}}</p>
             <hr />
-            <button on-click="buttonClick">Appeal/Report</button>
+            <button on-click="$(this).parent().find('fieldset').toggle();">Appeal/Report</button>
+            <fieldset style="display:none;">Why do you think so?<input type="text" /></fieldset>
         </div>
     </script>
 
