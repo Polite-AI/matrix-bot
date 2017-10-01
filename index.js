@@ -65,8 +65,8 @@ config.bots.forEach(botConfig => {
                 const room_key = require('crypto').createHash('sha256',salt)
                                     .update('matrix'+room.roomId)
                                     .digest('base64');
-
-                //client.sendTextMessage(member.roomId, makeMessageResponse('http://polite.ai is Bot is in the room ', null, 'english', room_key, null));
+                client.sendTextMessage(member.roomId, `Polite.AI bot has entered the building...\nTeach me more at http://api.polite.ai/admin/`+room_key);
+                
             });
         }
     });
