@@ -1,5 +1,5 @@
 const languagePacks = require('./languagePacks.json');
-const myUrl = 'http://api.polite.ai';
+const myURL = 'http://api.polite.ai';
 
 module.exports = function makeMessageResponse(message, classification, language, key, eventid) {
     const pack = languagePacks[language || 'english'];
