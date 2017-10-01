@@ -8,6 +8,8 @@ const fs = require('fs');
 
 const handleMessage = require('./app.js'); // Our 'routes'
 
+const salt = config.global.secretsalt;
+
 config.bots.forEach(botConfig => {
     log.info(`Starting PoliteAI Matrix Bot using [${botConfig.userId}]`);
 
