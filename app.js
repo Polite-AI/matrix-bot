@@ -25,7 +25,7 @@ module.exports = function (message, room, event, client, language) {
             // Make a hash
             const hash = crypto.createHash('sha256');
             hash.update(salt+'matrix'+room.roomId);
-            const room_key = hash.digest('hex')
+            const room_key = hash.digest('base64')
 
             const positiveResults = Object.keys(res.results).filter(key => Number(res.results[key]));
             // If we got a positive result then bitch in the room
