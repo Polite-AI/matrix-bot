@@ -6,5 +6,5 @@ module.exports = function makeMessageResponse(message, classification, language,
     const randIndex = Math.floor(Math.random() * pack.length);
     //const reportUrl = ' (challenge me at '+myURL+'/admin/'+key+')';
     const reportUrl = ' (challenge me at '+myURL+'/admin/'+key+((eventid != null)?('#'+encodeURIComponent(eventid)):'')+')';
-    return ((classification != null?pack[randIndex]:message)+reportUrl;
+    return ((classification != null)?pack[randIndex]:message)+reportUrl;
 }
