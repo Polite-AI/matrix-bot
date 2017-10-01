@@ -66,7 +66,7 @@ config.bots.forEach(botConfig => {
                                     .update('matrix'+room.roomId)
                                     .digest('base64');
 
-                client.sendTextMessage(member.roomId, makeMessageResponse('http://polite.ai is Bot is in the room ', null, 'english', room_key, null));
+                //client.sendTextMessage(member.roomId, makeMessageResponse('http://polite.ai is Bot is in the room ', null, 'english', room_key, null));
             });
         }
     });
