@@ -21,14 +21,16 @@ module.exports = function (message, room, event, client, language) {
         })
         .then(res => {
             log.log(`Got following results for [${message}]: `, res.results);
-            const hash = crypto.createHash('sha256');
 
+            // Make a hash
+            const hash = crypto.createHash('sha256');
             hash.update(salt+'matrix'+room.roomId);
+            const room_key = hash.digest('hex')
 
             const positiveResults = Object.keys(res.results).filter(key => Number(res.results[key]));
             // If we got a positive result then bitch in the room
             if (positiveResults.length) {
-                const messageResponse = makeMessageResponse(message, res.results, language);
+                const messageResponse = makeMessageResponse(message, res.results, language, room_key, event.event.event_id);
                 client.sendTextMessage(room.roomId, `${event.getSender()}: ${messageResponse}`);
             }
             // Always store the message in the DB
@@ -38,7 +40,7 @@ module.exports = function (message, room, event, client, language) {
                 derived: JSON.stringify(res.results),
                 room_provider: 'matrix',
                 room_id: room.roomId,
-                room_key: hash.digest('hex'),
+                room_key: room_key,
                 event_id: event.event.event_id,
                 time: event._date
             });

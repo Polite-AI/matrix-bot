@@ -1,7 +1,9 @@
 const languagePacks = require('./languagePacks.json');
+const myUrl = 'http://api.polite.ai';
 
-module.exports = function makeMessageResponse(message, classification, language) {
+module.exports = function makeMessageResponse(message, classification, language, key, eventid) {
     const pack = languagePacks[language || 'english'];
     const randIndex = Math.floor(Math.random() * pack.length);
-    return pack[randIndex];
+    const reportUrl = ' (challenge me at '+myURL+'/admin/'+key+'#'+eventid+')';
+    return pack[randIndex]+reportUrl;
 }
