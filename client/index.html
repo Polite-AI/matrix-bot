@@ -30,7 +30,7 @@
             <!--pre><code>{{JSON.stringify(data, null, '\t')}}</code-->
             <p><label>{{data.user_id}}</label>{{data.message}}</p>
             <hr />
-            <button>Appeal/Report</button>
+            <button on-click=clickHandle>Appeal/Report</button>
             <fieldset style="display:none;">Why do you think so?<input type="text" /></fieldset>
         </div>
     </script>
@@ -57,7 +57,7 @@
     <script src="/js/plugins.js"></script>
     <script src="/js/main.js"></script>
     <script>
-    $('button').click(()=>$(this).parent().find('fieldset').toggle());
+    const clicklHandle=() => $(this).parent().find('fieldset').toggle());
     </script>
 
     <!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
