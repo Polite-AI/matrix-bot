@@ -24,7 +24,7 @@ const r = new Ractive({
     data: {},
     oninit: function () {
         const self = this;
-        const roomKey = location.href.split('?')[0].split('/').slice(-1)[0];
+        const roomKey = location.href.split('/').slice(-1)[0];
         fetch(`http://${location.hostname}:8080/getMessages/${roomKey}`)
             .then(res => res.json())
             .then(data => self.set('messages', data));
