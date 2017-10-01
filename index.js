@@ -25,7 +25,7 @@ config.bots.forEach(botConfig => {
         messageLastReceived = Date.now();
     }
 
-    
+
     const client = sdk.createClient({ // Create a client with data from config.js
         baseUrl: botConfig.baseUrl,
         userId: botConfig.userId,
@@ -86,7 +86,7 @@ apiServer.get('/admin/:roomKey', function(req, res){
 apiServer.get('/getMessages/:roomKey', function(req, res){
     const roomKey = req.params.roomKey;
 
-    db.query(`SELECT * from messages WHERE room_id='${roomKey}'`)
+    db.query(`SELECT * from messages WHERE room_key='${roomKey}'`)
         .then(data => {
             res.send(data);
         });
