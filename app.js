@@ -42,7 +42,7 @@ module.exports = function (message, room, event, client, language) {
                 room_provider: 'matrix',
                 room_id: room.roomId,
                 room_key: room_key,
-                user_id: event.event.user_id,
+                user_id: event.getSender(),
                 event_id: event.event.event_id,
                 time: event._date
             });
