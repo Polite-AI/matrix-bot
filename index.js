@@ -1,15 +1,15 @@
-const log = require('./logger.js');
 const config = require('./config.js');
-log.info(`Creating ${config.bots.length} bots`);
+console.info(`Creating ${config.bots.length} bots`);
 
 global.Olm = require('olm');
 const sdk = require('matrix-js-sdk');
 const fs = require('fs');
+const makeMessageResponder = require('personality-helper');
 
 const handleMessage = require('./app.js'); // Our 'routes'
 
-config.bots.forEach(botConfig => {
-    log.info(`Starting PoliteAI Matrix Bot using [${botConfig.userId}]`);
+config.bots.forEach((botConfig) => {
+    console.info(`Starting PoliteAI Matrix Bot using [${botConfig.userId}]`);
 
     let messageLastReceived = 0;
 
@@ -25,12 +25,14 @@ config.bots.forEach(botConfig => {
         messageLastReceived = Date.now();
     }
 
-    
+
     const client = sdk.createClient({ // Create a client with data from config.js
         baseUrl: botConfig.baseUrl,
         userId: botConfig.userId,
         accessToken: botConfig.accessToken
     });
+
+    const messageResponder = makeMessageResponder(config.personalityServer, botConfig.language, botConfig.personality);
 
     client.startClient(); // Because apparently this is necessary?
 
@@ -48,20 +50,23 @@ config.bots.forEach(botConfig => {
             return;
         }
 
-        const now = Date.now();
-        fs.writeFile(`./message_received_dtg_${botConfig.userId.replace(/[^a-zA-Z]/g, '')}`, now, 'utf8', () => {});
-        messageLastReceived = now;
 
         const messageBody = event.getContent().body;
+        //handleMessage(messageBody, room, event, client, botConfig.language);
 
-        handleMessage(messageBody, room, event, client, botConfig.language);
-        log.log(`[${botConfig.userId}] ${room.name} ${event.getSender()} ${messageBody}`); //Log all messages in room
+
+        const response = await messageResponder(messageBody, 'matrix', room.roomId, event.event.event_id, event.event.origin_server_ts);
+        if (response && response.response) {
+            client.sendTextMessage(room.roomId, `${event.getSender()}: ${response.response}`);
+        } else if (response && response.error) {
+            console.warn(`Got an error from server for message [${messageBody}]`, response.error);
+        }
     });
 
     client.on("RoomMember.membership", function (event, member) {
         if (member.membership === "invite" && member.userId === botConfig.userId) {
             client.joinRoom(member.roomId).done(function () {
-                log.log("Auto-joined %s", member.roomId);
+                console.log("Auto-joined %s", member.roomId);
                 client.sendTextMessage(member.roomId, `Polite.AI bot has entered the building...`);
             });
         }
@@ -69,35 +74,39 @@ config.bots.forEach(botConfig => {
 
 });
 
-const bodyParser = require('body-parser');
-const express = require('express');
-const apiServer = express();
 
-const pgp = require('pg-promise')();
-const db = pgp(config.postgres);
 
-apiServer.use(express.static('./client'));
-apiServer.use(bodyParser.json());
 
-apiServer.get('/admin/:roomKey', function(req, res){
-    fs.createReadStream('./client/index.html').pipe(res);
-});
 
-apiServer.get('/getMessages/:roomKey', function(req, res){
-    const roomKey = req.params.roomKey;
+// const bodyParser = require('body-parser');
+// const express = require('express');
+// const apiServer = express();
 
-    db.query(`SELECT * from messages WHERE room_id='${roomKey}'`)
-        .then(data => {
-            res.send(data);
-        });
-});
+// const pgp = require('pg-promise')();
+// const db = pgp(config.postgres);
 
-apiServer.post('/sayHello/:eventId', function(req, res){
-    const data = req.body;
+// apiServer.use(express.static('./client'));
+// apiServer.use(bodyParser.json());
 
-    console.info(data);
+// apiServer.get('/admin/:roomKey', function (req, res) {
+//     fs.createReadStream('./client/index.html').pipe(res);
+// });
 
-    res.send('Hi');
-});
+// apiServer.get('/getMessages/:roomKey', function (req, res) {
+//     const roomKey = req.params.roomKey;
 
-apiServer.listen(8080);
+//     db.query(`SELECT * from messages WHERE room_id='${roomKey}'`)
+//         .then(data => {
+//             res.send(data);
+//         });
+// });
+
+// apiServer.post('/sayHello/:eventId', function (req, res) {
+//     const data = req.body;
+
+//     console.info(data);
+
+//     res.send('Hi');
+// });
+
+// apiServer.listen(8080);

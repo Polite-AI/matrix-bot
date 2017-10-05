@@ -2,37 +2,31 @@
 
 const config = {
     "production": {
-        "api": {
-            "version": "1.0"
-        },
-        "postgres": {
-            "host": "HOST",
-            "user": "USER",
-            "password": "PASSWORD",
-            "database": "DATABASE"
+        "personalityServer": {
+            "host": "localhost",
+            "port": "8000",
+            "version": "1"
         },
         "bots": [{
             "baseUrl": "https://matrix.org",
             "userId": "@USERNAMEHERE:matrix.org",
             "accessToken": "ACCESSTOKENHERE",
-            "language": "english"
+            "language": "english",
+            "personality": "standard"
         }]
     },
     "development": {
-        "api": {
-            "version": "1.0"
-        },
-        "postgres": {
-            "host": "HOST",
-            "user": "USER",
-            "password": "PASSWORD",
-            "database": "DATABASE"
+        "personalityServer": {
+            "host": "localhost",
+            "port": "8000",
+            "version": "1"
         },
         "bots": [{
             "baseUrl": "https://matrix.org",
             "userId": "@USERNAMEHERE:matrix.org",
             "accessToken": "ACCESSTOKENHERE",
-            "language": "english"
+            "language": "english",
+            "personality": "standard"
         }]
     }
 };
