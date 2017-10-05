@@ -27,9 +27,11 @@
 
     <script id='message' type='text/html'>
         <div class="card">
-            <pre><code>{{JSON.stringify(data, null, '\t')}}</code></pre>
+            <!--pre><code>{{JSON.stringify(data, null, '\t')}}</code-->
+            <p><label>{{data.user_id}}</label>{{data.message}}</p>
             <hr />
-            <button on-click="buttonClick">Do A Thing</button>
+            <button on-click=clickHandle>Appeal/Report</button>
+            <fieldset style="display:none;">Why do you think so?<input type="text" /></fieldset>
         </div>
     </script>
 
@@ -54,6 +56,9 @@
     <script src="https://cdn.jsdelivr.net/npm/ractive"></script>
     <script src="/js/plugins.js"></script>
     <script src="/js/main.js"></script>
+    <script>
+    const clickHandle=(() => $(this).parent().find('fieldset').toggle());
+    </script>
 
     <!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
     <script>
