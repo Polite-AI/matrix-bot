@@ -64,7 +64,7 @@ config.bots.forEach((botConfig) => {
     client.on("RoomMember.membership", function (event, member) {
         if (member.membership === "invite" && member.userId === botConfig.userId) {
             client.joinRoom(member.roomId).done(function () {
-                log.log("Auto-joined %s", member.roomId);
+                console.log("Auto-joined %s", member.roomId);
                 const room_key = require('crypto').createHash('sha256',salt)
                                     .update('matrix'+member.roomId)
                                     .digest('base64');
