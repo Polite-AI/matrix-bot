@@ -69,7 +69,6 @@ config.bots.forEach((botConfig) => {
                                     .update('matrix'+member.roomId)
                                     .digest('base64');*/
                 client.sendTextMessage(member.roomId, 'Polite.AI bot has entered the building...\nTeach me more at http://api.polite.ai/admin/');
-
             });
         }
     });
