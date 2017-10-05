@@ -6,8 +6,6 @@ const sdk = require('matrix-js-sdk');
 const fs = require('fs');
 const makeMessageResponder = require('personality-helper');
 
-const handleMessage = require('./app.js'); // Our 'routes'
-
 config.bots.forEach((botConfig) => {
     console.info(`Starting PoliteAI Matrix Bot using [${botConfig.userId}]`);
 
