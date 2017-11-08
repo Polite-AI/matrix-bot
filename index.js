@@ -4,7 +4,7 @@ console.info(`Creating ${config.bots.length} bots`);
 global.Olm = require('olm');
 const sdk = require('matrix-js-sdk');
 const fs = require('fs');
-const makeMessageResponder = require('personality-helper');
+const { MessageResponder } = require('personality-helper');
 
 config.bots.forEach((botConfig) => {
     console.info(`Starting PoliteAI Matrix Bot using [${botConfig.userId}]`);
@@ -30,7 +30,7 @@ config.bots.forEach((botConfig) => {
         accessToken: botConfig.accessToken
     });
 
-    const messageResponder = makeMessageResponder(config.personalityServer, botConfig.language, botConfig.personality);
+    const responder = new MessageResponder(config.personalityServer, botConfig.classifier, botConfig.language, botConfig.personality);
 
     client.startClient(); // Because apparently this is necessary?
 
@@ -51,10 +51,10 @@ config.bots.forEach((botConfig) => {
 
         const messageBody = event.getContent().body;
         //handleMessage(messageBody, room, event, client, botConfig.language);
+console.log('event', event);
 
-
-        const response = await messageResponder(messageBody, 'matrix', room.roomId, event.event.event_id, event.event.origin_server_ts);
-        if (response && response.response) {
+        const response = await responder.message(messageBody, 'matrix', room.roomId, event.event.event_id, event.sender.userId, event.event.origin_server_ts);
+        if (response && response.status != "seenBefore" && response.triggered && response.response) {
             client.sendTextMessage(room.roomId, `${event.getSender()}: ${response.response}`);
         } else if (response && response.error) {
             console.warn(`Got an error from server for message [${messageBody}]`, response.error);
@@ -62,13 +62,14 @@ config.bots.forEach((botConfig) => {
     });
 
     client.on("RoomMember.membership", function (event, member) {
+        console.log("Got invite for event: ", event, 'Member: ', member);
+
         if (member.membership === "invite" && member.userId === botConfig.userId) {
             client.joinRoom(member.roomId).done(function () {
                 console.log("Auto-joined %s", member.roomId);
-                /*const room_key = require('crypto').createHash('sha256', salt)
-                                    .update('matrix'+member.roomId)
-                                    .digest('base64');*/
-                client.sendTextMessage(member.roomId, 'Polite.AI bot has entered the building...\nTeach me more at http://api.polite.ai/admin/');
+                const response = await responder.join('matrix', event.target.roomId, event.event.event_id, event.sender.userId, event.event.origin_server_ts);
+                if(response && response.response)
+                    client.sendTextMessage(member.roomId, response.response);
             });
         }
     });
